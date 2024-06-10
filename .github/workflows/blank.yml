@@ -23,11 +23,11 @@ jobs:
     #    with:
     #      ref: some-branch
 
-    #  - name: Setup Java
-    #    uses: actions/setup-java@v4
-    #    with:
-    #      distribution: 'temurin'
-    #      java-version: '21'
+       - name: Setup Java
+         uses: actions/setup-java@v4
+         with:
+          distribution: 'temurin'
+          java-version: '21'
 
     #  - name: Refactor .properties file for Basic Auth
     #    if: ${{ matrix.env_name == 'dev' }}
