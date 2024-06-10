@@ -83,12 +83,18 @@ jobs:
 
 
       - name: Publish test report
-        uses: peaceiris/actions-gh-pages@v3
-        if: always()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history/
+        uses: peaceiris/actions-gh-pages@v2
+        env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: allure-history
+   
+   
+   #     if: always()
+   #     with:
+   #       github_token: ${{ secrets.GITHUB_TOKEN }}
+   #       publish_branch: gh-pages
+   #       publish_dir: allure-history/
 
     #  - name: Send email using AWS SES
     #    if: always()
