@@ -1,0 +1,104 @@
+name: Falcon Nightly Smoke Tests
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  tests:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        env_name: ['dev', 'test']
+    environment: 
+      name: ${{ matrix.env_name }}
+    steps: 
+       - uses: actions/checkout@v3.1.0
+       - name: Step name
+         run: echo "Hello World!"
+
+    #  - name: Checkout Repository
+    #    uses: actions/checkout@v4.1.1
+    #    with:
+    #      ref: some-branch
+
+    #  - name: Setup Java
+    #    uses: actions/setup-java@v4
+    #    with:
+    #      distribution: 'temurin'
+    #      java-version: '21'
+
+    #  - name: Refactor .properties file for Basic Auth
+    #    if: ${{ matrix.env_name == 'dev' }}
+    #    run: sed -i "s~url=https://FALCON_BASIC_AUTH_USERNAME:FALCON_BASIC_AUTH_PASSWORD@~url=https://${{ secrets.FALCON_BASIC_AUTH_USERNAME }}:${{ secrets.FALCON_BASIC_AUTH_PASSWORD }}@~" src/test/resources/Environments/${{ matrix.env_name }}.properties
+
+       
+     #   env:
+     #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+     #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+     #     AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
+       - name: Generating Artifact
+         id: artifact
+         uses: actions/upload-artifact@v4
+         if: always()
+         with:
+          name: allure-results-${{ matrix.env_name }}
+          path: ./target/allure-results
+
+  report:
+    if: always()
+    needs: tests
+    strategy:
+      fail-fast: false
+      matrix:
+        env_name: ['dev', 'test']
+    environment: 
+      name: ${{ matrix.env_name }}
+    runs-on: ubuntu-latest
+    steps:
+      #- name: Download Build Artifacts
+      #  id: download-artifacts
+      #  uses: actions/download-artifact@v4.1.0
+      #  with:
+      #    name: allure-results-${{ matrix.env_name }}
+      #    path: ./target/allure-results
+
+      - name: Load test report history
+        uses: actions/checkout@v4.1.1
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Build test report
+        uses: simple-elf/allure-report-action@v1.7
+        if: always()
+        with:
+          gh_pages: gh-pages
+          allure_history: allure-history/
+          allure_results: target/allure-results
+
+
+      - name: Publish test report
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history/
+
+    #  - name: Send email using AWS SES
+    #    if: always()
+    #    uses: dsfx3d/action-aws-ses@v1
+    #    env:
+    #      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+    #    with:
+    #      to: ${{ vars.RECIPIENTS }}
+     #     from: 'github-action@${{ matrix.env_name }}.falconproject.xyz'
+     #     subject: 'Falcon Automation smoke test results - ${{ steps.tests.outcome }} ${{ env.timestamp }}'
+     #     body_html: <p1> If you would like to view the report, please follow the link  - ${{ vars.GH_PAGES_URL }}</p1>
