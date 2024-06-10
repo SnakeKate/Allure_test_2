@@ -18,10 +18,10 @@ jobs:
        - name: Step name
          run: echo "Hello World!"
 
-    #  - name: Checkout Repository
-    #    uses: actions/checkout@v4.1.1
-    #    with:
-    #      ref: some-branch
+       - name: Checkout Repository
+         uses: actions/checkout@v4.1.1
+         with:
+          ref: some-branch
 
     #   - name: Setup Java
     #     uses: actions/setup-java@v4
