@@ -14,10 +14,16 @@ jobs:
     environment: 
       name: ${{ matrix.env_name }}
     steps: 
-       - uses: actions/checkout@v4.1.6 
-       - name: Step name
-         run: echo "Hello World!"
+       - uses: actions/checkout@v4.1.6    
+       - name: Install Node.js
+         uses: actions/setup-node@v3
+         with:
+           node-version: '16'
+      
+       - run: npm install
 
+       - name: Run tests
+         run: npm test
     #   - name: Checkout Repository
     #     uses: actions/checkout@v4.1.6 
     #     with:
