@@ -87,7 +87,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-history/${{ matrix.env_name }}
+          publish_dir: allure-history/dev
   #      env:
   #        PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   #        PUBLISH_BRANCH: gh-pages
