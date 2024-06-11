@@ -22,8 +22,8 @@ jobs:
       
        - run: npm install
 
-       - name: Run tests
-         run: npm test
+     #  - name: Run tests
+     #    run: npm test
 
        - name: results
          run: npm run test -- --no-color > results.txt
