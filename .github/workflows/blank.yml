@@ -80,7 +80,7 @@ jobs:
         uses: actions/download-artifact@v4.1.0
         with:
         #  name: allure-results-${{ matrix.env_name }}
-          name: dev
+          name: allure-results
           path: target/allure-results
 
       - name: Load test report history
