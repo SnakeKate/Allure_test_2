@@ -58,12 +58,12 @@ jobs:
       name: ${{ matrix.env_name }}
     runs-on: ubuntu-latest
     steps:
-      #- name: Download Build Artifacts
-      #  id: download-artifacts
-      #  uses: actions/download-artifact@v4.1.0
-      #  with:
-      #    name: allure-results-${{ matrix.env_name }}
-      #    path: ./target/allure-results
+      - name: Download Build Artifacts
+        id: download-artifacts
+        uses: actions/download-artifact@v4.1.0
+        with:
+          name: allure-results-${{ matrix.env_name }}
+          path: ./target/allure-results
 
       - name: Load test report history
         uses: actions/checkout@v4.1.6 
