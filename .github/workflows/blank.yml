@@ -24,6 +24,11 @@ jobs:
 
        - name: Run tests
          run: npm test
+
+       - name: ls -la
+         run: la -la
+
+         
     #   - name: Checkout Repository
     #     uses: actions/checkout@v4.1.6 
     #     with:
