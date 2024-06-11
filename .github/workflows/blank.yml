@@ -53,6 +53,10 @@ jobs:
           name: allure-results-${{ matrix.env_name }}
           path: ./target/allure-results
 
+       - name: Check Allure Results
+         run: ls -la ./target/allure-results
+
+
   report:
     if: always()
     needs: tests
