@@ -9,10 +9,11 @@ jobs:
     runs-on: windows-latest
     strategy:
       fail-fast: false
-      matrix:
-        env_name: ['dev']
+     # matrix:
+     #    env_name: ['dev', 'test']
     environment: 
-      name: ${{ matrix.env_name }}
+    #  name: ${{ matrix.env_name }}
+      name: dev
     steps: 
        - uses: actions/checkout@v4.1.6    
        - name: Install Node.js
@@ -58,7 +59,8 @@ jobs:
          uses: actions/upload-artifact@v4
          if: always()
          with:
-          name: allure-results-${{ matrix.env_name }}
+         # name: allure-results-${{ matrix.env_name }}
+          name: allure-results-dev
           path: ./allure-results
 
   report:
@@ -66,17 +68,19 @@ jobs:
     needs: tests
     strategy:
       fail-fast: false
-      matrix:
-        env_name: ['dev', 'test']
+    #  matrix:
+    #    env_name: ['dev', 'test']
     environment: 
-      name: ${{ matrix.env_name }}
+    #  name: ${{ matrix.env_name }}
+      name: dev
     runs-on: ubuntu-latest
     steps:
       - name: Download Build Artifacts
         id: download-artifacts
         uses: actions/download-artifact@v4.1.0
         with:
-          name: allure-results-${{ matrix.env_name }}
+        #  name: allure-results-${{ matrix.env_name }}
+          name: dev
           path: target/allure-results
 
       - name: Load test report history
@@ -92,7 +96,8 @@ jobs:
         if: always()
         with:
           gh_pages: gh-pages
-          allure_history: allure-history/${{ matrix.env_name }}/
+      #    allure_history: allure-history/${{ matrix.env_name }}/
+          allure_history: allure-history/
           allure_results: target/allure-results
 
 
@@ -101,7 +106,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-history/${{ matrix.env_name }}/
+         # publish_dir: allure-history/${{ matrix.env_name }}/
+          publish_dir: allure-history/
   #      env:
   #        PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   #        PUBLISH_BRANCH: gh-pages
