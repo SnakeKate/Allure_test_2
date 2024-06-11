@@ -9,11 +9,10 @@ jobs:
     runs-on: windows-latest
     strategy:
       fail-fast: false
-     # matrix:
-     #    env_name: ['dev', 'test']
+      matrix:
+        env_name: ['dev']
     environment: 
-    #  name: ${{ matrix.env_name }}
-      name: dev
+      name: ${{ matrix.env_name }}
     steps: 
        - uses: actions/checkout@v4.1.6    
        - name: Install Node.js
@@ -59,8 +58,7 @@ jobs:
          uses: actions/upload-artifact@v4
          if: always()
          with:
-         # name: allure-results-${{ matrix.env_name }}
-          name: allure-results
+          name: allure-results-${{ matrix.env_name }}
           path: ./allure-results
 
   report:
@@ -68,19 +66,17 @@ jobs:
     needs: tests
     strategy:
       fail-fast: false
-    #  matrix:
-    #    env_name: ['dev', 'test']
+      matrix:
+        env_name: ['dev']
     environment: 
-    #  name: ${{ matrix.env_name }}
-      name: dev
+      name: ${{ matrix.env_name }}
     runs-on: ubuntu-latest
     steps:
       - name: Download Build Artifacts
         id: download-artifacts
         uses: actions/download-artifact@v4.1.0
         with:
-        #  name: allure-results-${{ matrix.env_name }}
-          name: allure-results
+          name: allure-results-${{ matrix.env_name }}
           path: target/allure-results
 
       - name: Load test report history
@@ -96,8 +92,7 @@ jobs:
         if: always()
         with:
           gh_pages: gh-pages
-      #    allure_history: allure-history/${{ matrix.env_name }}/
-          allure_history: allure-history/
+          allure_history: allure-history/${{ matrix.env_name }}/
           allure_results: target/allure-results
 
 
@@ -106,8 +101,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-         # publish_dir: allure-history/${{ matrix.env_name }}/
-          publish_dir: allure-history/
+          publish_dir: allure-history/${{ matrix.env_name }}/
   #      env:
   #        PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   #        PUBLISH_BRANCH: gh-pages
@@ -130,4 +124,4 @@ jobs:
     #      to: ${{ vars.RECIPIENTS }}
      #     from: 'github-action@${{ matrix.env_name }}.falconproject.xyz'
      #     subject: 'Falcon Automation smoke test results - ${{ steps.tests.outcome }} ${{ env.timestamp }}'
-     #     body_html: <p1> If you would like to view the report, please follow the link  - ${{ vars.GH_PAGES_URL }}</p1>
+     #     body_html: <p1> If you would like to view the report, please follow the link  - ${{ vars.GH_PAGES_URL }}</p1> - ${{ vars.GH_PAGES_URL }}</p1>
