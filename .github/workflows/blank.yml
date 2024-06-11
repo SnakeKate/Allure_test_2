@@ -54,7 +54,7 @@ jobs:
           path: ./target/allure-results
 
        - name: Check Allure Results
-         run: ls -la ./target/allure-results
+         run: ll ./target/allure-results
 
 
   report:
