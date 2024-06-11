@@ -26,7 +26,7 @@ jobs:
      #    run: npm test
 
        - name: results
-         run: npm run test -- --no-color > ./target/allure-results
+         run: npm run test -- --no-color > ./allure-results
        
        - name: ls -la
          run: dir
