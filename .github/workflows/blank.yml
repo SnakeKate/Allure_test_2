@@ -29,7 +29,7 @@ jobs:
          run: npm run test -- --no-color > ./allure-results
        
        - name: ls -la
-         run: dir
+         run: dir ./target/allure-results
 
          
     #   - name: Checkout Repository
