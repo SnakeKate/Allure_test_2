@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        env_name: ['dev', 'test']
+        env_name: ['dev']
     environment: 
       name: ${{ matrix.env_name }}
     steps: 
