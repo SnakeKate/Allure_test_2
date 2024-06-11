@@ -60,7 +60,7 @@ jobs:
          if: always()
          with:
          # name: allure-results-${{ matrix.env_name }}
-          name: allure-results-dev
+          name: allure-results
           path: ./allure-results
 
   report:
