@@ -1,0 +1,17 @@
+{
+  "name": "test-project",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "allure-commandline": "^2.29.0",
+    "allure-mocha": "^3.0.0-beta.3",
+    "jest": "^29.0.0",
+    "mocha": "^10.4.0",
+    "mocha-allure-reporter": "^1.4.0"
+  },
+    "jest": {
+    "coverageDirectory": "./allure-results"
+  }  
+}
