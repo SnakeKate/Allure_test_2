@@ -22,11 +22,11 @@ jobs:
       
        - run: npm install
 
-     #  - name: Run tests
-     #    run: npm test
+       - name: Run tests
+         run: npm test
 
-       - name: results
-         run: sudo npm run test -- --no-color > ./allure-results
+      # - name: results
+      #   run: sudo npm run test -- --no-color > ./allure-results
        
        - name: ls -la
          run: dir ./target/allure-results
