@@ -61,13 +61,42 @@ jobs:
           name: allure-results-${{ matrix.env_name }}
           path: ./allure-results
 
-  report:
-    if: always()
-    needs: tests
+         
+  tests2:
+    runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
-        env_name: ['dev']
+        env_name: ['prod']
+    environment: 
+      name: ${{ matrix.env_name }}
+    steps: 
+       - uses: actions/checkout@v4.1.6    
+       - name: Install Node.js
+         uses: actions/setup-node@v3
+         with:
+           node-version: '16'
+      
+       - run: npm install
+
+       - name: Run tests
+         run: npm test
+
+       - name: Generating Artifact
+         id: artifact
+         uses: actions/upload-artifact@v4
+         if: always()
+         with:
+          name: allure-results-${{ matrix.env_name }}
+          path: ./allure-results
+
+  report:
+    if: always()
+    needs: [tests, tests2]
+    strategy:
+      fail-fast: false
+      matrix:
+        env_name: ['dev', 'prod']
     environment: 
       name: ${{ matrix.env_name }}
     runs-on: ubuntu-latest
