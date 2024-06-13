@@ -1,5 +1,5 @@
 name: Falcon Nightly Smoke Tests
- 
+
 on:
   push:
     branches: ["main"]
