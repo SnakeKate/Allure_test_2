@@ -1,14 +1,14 @@
 name: Falcon Nightly Smoke Tests for test
 
 on:
-  push:
-    branches: ["main"]
+#  push:
+#    branches: ["main"]
 
     
-#  workflow_run:
-#    workflows: ["Falcon Nightly Smoke Tests"]
-#    types:
-#      - completed
+  workflow_run:
+    workflows: ["Falcon Nightly Smoke Tests"]
+    types:
+      - completed
 jobs:
   tests:
     runs-on: windows-latest
