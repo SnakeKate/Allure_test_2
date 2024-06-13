@@ -6,7 +6,7 @@ on:
 
     
   workflow_run:
-    workflows: ["Falcon Nightly Smoke Tests"]
+    workflows: ["pages build and deployment"]
     types:
       - completed
 jobs:
