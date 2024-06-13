@@ -1,10 +1,13 @@
 name: Falcon Nightly Smoke Tests for test
 
 on:
-  workflow_run:
-    workflows: ["Falcon Nightly Smoke Tests"]
-    types:
-      - completed
+  schedule:
+    - cron: '10 16 * * *' 
+    
+#  workflow_run:
+#    workflows: ["Falcon Nightly Smoke Tests"]
+#    types:
+#      - completed
 jobs:
   tests:
     runs-on: windows-latest
