@@ -1,10 +1,8 @@
 name: Falcon Nightly Smoke Tests
  
 on:
-  schedule:
-    - cron: '18 16 * * *'
-  #push:
-  #  branches: ["main"]
+  push:
+    branches: ["main"]
 
 jobs:
   tests:
