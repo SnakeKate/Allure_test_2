@@ -2,7 +2,7 @@ name: Falcon Nightly Smoke Tests
 
 on:
   push:
-    #branches: ["main" 'prod']
+    #branches: ["main"]
 
 jobs:
   tests:
@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        env_name: ['dev, test']
+        env_name: ['dev']
     environment: 
       name: ${{ matrix.env_name }}
     steps: 
@@ -61,8 +61,6 @@ jobs:
           name: allure-results-${{ matrix.env_name }}
           path: ./allure-results
 
-  
-
   report:
     if: always()
     needs: tests
@@ -104,6 +102,34 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-history/${{ matrix.env_name }}/
+  
+  tests2:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        env_name: ['test']
+    environment: 
+      name: ${{ matrix.env_name }}
+    steps: 
+       - uses: actions/checkout@v4.1.6    
+       - name: Install Node.js
+         uses: actions/setup-node@v3
+         with:
+           node-version: '16'
+      
+       - run: npm install
+
+       - name: Run tests
+         run: npm test
+
+       - name: Generating Artifact
+         id: artifact
+         uses: actions/upload-artifact@v4
+         if: always()
+         with:
+          name: allure-results-${{ matrix.env_name }}
+          path: ./allure-results
 
   report2:
     if: always()
