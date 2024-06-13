@@ -84,7 +84,7 @@ jobs:
         if: always()
         continue-on-error: true
         with:
-          ref: gh-pages
+          ref: gh-pages/dev
           path: gh-pages/dev
 
       - name: Build test report
@@ -100,7 +100,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
+          publish_branch: gh-pages/dev
           publish_dir: allure-history/${{ matrix.env_name }}/
   
   
