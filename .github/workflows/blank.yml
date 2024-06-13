@@ -105,6 +105,7 @@ jobs:
   
   tests2:
     runs-on: windows-latest
+    needs: report
     strategy:
       fail-fast: false
       matrix:
