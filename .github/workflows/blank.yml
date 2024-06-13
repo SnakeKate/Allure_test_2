@@ -103,76 +103,7 @@ jobs:
           publish_branch: gh-pages
           publish_dir: allure-history/${{ matrix.env_name }}/
   
-  tests2:
-    runs-on: windows-latest
-    needs: report
-    strategy:
-      fail-fast: false
-      matrix:
-        env_name: ['test']
-    environment: 
-      name: ${{ matrix.env_name }}
-    steps: 
-       - uses: actions/checkout@v4.1.6    
-       - name: Install Node.js
-         uses: actions/setup-node@v3
-         with:
-           node-version: '16'
-      
-       - run: npm install
-
-       - name: Run tests
-         run: npm test
-
-       - name: Generating Artifact
-         id: artifact
-         uses: actions/upload-artifact@v4
-         if: always()
-         with:
-          name: allure-results-${{ matrix.env_name }}
-          path: ./allure-results
-
-  report2:
-    if: always()
-    needs: tests2
-    strategy:
-      fail-fast: false
-      matrix:
-        env_name: ['test']
-    environment: 
-      name: ${{ matrix.env_name }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download Build Artifacts
-        id: download-artifacts
-        uses: actions/download-artifact@v4.1.0
-        with:
-          name: allure-results-${{ matrix.env_name }}
-          path: target/allure-results
-
-      - name: Load test report history
-        uses: actions/checkout@v4.1.6 
-        if: always()
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
-
-      - name: Build test report
-        uses: simple-elf/allure-report-action@v1.7
-        if: always()
-        with:
-          gh_pages: gh-pages
-          allure_history: allure-history/${{ matrix.env_name }}/
-          allure_results: target/allure-results
-
-
-      - name: Publish test report
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history/${{ matrix.env_name }}/
+  
   #      env:
   #        PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   #        PUBLISH_BRANCH: gh-pages
