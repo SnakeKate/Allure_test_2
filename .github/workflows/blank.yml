@@ -133,7 +133,7 @@ jobs:
 
   report2:
     if: always()
-    needs: tests
+    needs: tests2
     strategy:
       fail-fast: false
       matrix:
