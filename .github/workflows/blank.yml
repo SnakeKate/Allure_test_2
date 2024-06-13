@@ -58,7 +58,7 @@ jobs:
          uses: actions/upload-artifact@v4
          if: always()
          with:
-          name: allure-results-${{ matrix.env_name }}
+          name: allure-results-dev
           path: ./allure-results
 
   report:
@@ -76,7 +76,7 @@ jobs:
         id: download-artifacts
         uses: actions/download-artifact@v4.1.0
         with:
-          name: allure-results-${{ matrix.env_name }}
+          name: allure-results-dev
           path: target/allure-results
 
       - name: Load test report history
@@ -85,7 +85,7 @@ jobs:
         continue-on-error: true
         with:
           ref: gh-pages
-          path: gh-pages/dev
+          path: gh-pages/dev/
 
       - name: Build test report
         uses: simple-elf/allure-report-action@v1.7
