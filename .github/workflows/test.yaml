@@ -1,8 +1,9 @@
 name: Falcon Nightly Smoke Tests for test
 
 on:
-  schedule:
-    - cron: '15 16 * * *' 
+  push:
+    branches: ["main"]
+
     
 #  workflow_run:
 #    workflows: ["Falcon Nightly Smoke Tests"]
