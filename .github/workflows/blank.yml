@@ -84,7 +84,7 @@ jobs:
         if: always()
         continue-on-error: true
         with:
-          ref: gh-pages/dev
+          ref: gh-pages
           path: gh-pages/dev
 
       - name: Build test report
