@@ -25,13 +25,6 @@ jobs:
        - name: Run tests
          run: npm test
 
-      # - name: results
-      #   run: sudo npm run test -- --no-color > ./allure-results
-       
-       #- name: ls -la
-       #  run: dir ./target/allure-results
-
-         
     #   - name: Checkout Repository
     #     uses: actions/checkout@v4.1.6 
     #     with:
@@ -118,16 +111,6 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_API_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_2 }}
           timeout-minutes: 1  
-  #      env:
-  #        PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #        PUBLISH_BRANCH: gh-pages
-  #        PUBLISH_DIR: allure-history
-  
-   #     if: always()
-   #     with:
-   #       github_token: ${{ secrets.GITHUB_TOKEN }}
-   #       publish_branch: gh-pages
-   #       publish_dir: allure-history/
 
     #  - name: Send email using AWS SES
     #    if: always()
