@@ -1,14 +1,14 @@
 name: Falcon Nightly Smoke Tests for test
 
 on:
-#  push:
-#    branches: ["main"]
+  push:
+    branches: ["main"]
 
     
-  workflow_run:
-    workflows: ["pages build and deployment"]
-    types:
-      - completed
+#  workflow_run:
+#    workflows: ["pages build and deployment"]
+#    types:
+#      - completed
 jobs:
   tests:
     runs-on: windows-latest
@@ -56,6 +56,20 @@ jobs:
           name: allure-results-${{ matrix.env_name }}
           path: target/allure-results
 
+      - name: Repository Checkout
+        uses: actions/checkout@v4
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+      - name: Install Netlify
+        run: npm install netlify-cli@17.10.1 -g
+      - name: Install Dependencies
+        run: npm ci
+      - name: Build project
+        run: npm run build
+
       - name: Load test report history
         uses: actions/checkout@v4.1.6 
         if: always()
@@ -73,10 +87,17 @@ jobs:
           allure_results: target/allure-results
 
 
-      - name: Publish test report
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history/${{ matrix.env_name }}/
+#      - name: Publish test report
+#        uses: peaceiris/actions-gh-pages@v4
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          publish_branch: gh-pages
+#          publish_dir: allure-history/${{ matrix.env_name }}/
  
+      - name: Deploy to Netlify
+        id: netlify_deploy
+        run: |
+          netlify deploy \
+            --dir dist \
+            --site ${{ secrets.NETLIFY_SITE_ID }} \
+            --auth ${{ secrets.NETLIFY_API_TOKEN }}         
