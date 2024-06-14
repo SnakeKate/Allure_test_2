@@ -70,21 +70,30 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Load test report history
-        uses: actions/checkout@v4.1.6 
-        if: always()
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
+      - name: Generate Allure Report
+        run: allure generate target/allure-results --clean -o target/allure-report
 
-      - name: Build test report
-        uses: simple-elf/allure-report-action@v1.7
-        if: always()
-        with:
-          gh_pages: gh-pages
-          allure_history: allure-history/${{ matrix.env_name }}/
-          allure_results: target/allure-results
+      - name: Deploy to Netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: netlify deploy --dir=target/allure-report --prod
+      
+  #    - name: Load test report history
+  #      uses: actions/checkout@v4.1.6 
+  #      if: always()
+  #      continue-on-error: true
+  #      with:
+  #        ref: gh-pages
+  #        path: gh-pages
+
+  #    - name: Build test report
+  #      uses: simple-elf/allure-report-action@v1.7
+  #      if: always()
+  #      with:
+  #        gh_pages: gh-pages
+  #        allure_history: allure-history/${{ matrix.env_name }}/
+  #        allure_results: target/allure-results
 
 
 #      - name: Publish test report
@@ -94,10 +103,10 @@ jobs:
 #          publish_branch: gh-pages
 #          publish_dir: allure-history/${{ matrix.env_name }}/
  
-      - name: Deploy to Netlify
-        id: netlify_deploy
-        run: |
-          netlify deploy \
-            --dir dist \
-            --site ${{ secrets.NETLIFY_SITE_ID }} \
-            --auth ${{ secrets.NETLIFY_API_TOKEN }}         
+#      - name: Deploy to Netlify
+#        id: netlify_deploy
+#        run: |
+#          netlify deploy \
+#            --dir dist \
+#            --site ${{ secrets.NETLIFY_SITE_ID }} \
+#            --auth ${{ secrets.NETLIFY_API_TOKEN }}         
