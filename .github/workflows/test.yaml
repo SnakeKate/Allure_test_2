@@ -37,6 +37,10 @@ jobs:
          with:
           name: allure-results-${{ matrix.env_name }}
           path: ./allure-results
+      
+       - name: ls -la
+         run: dir 
+    
 
   report2:
     if: always()
