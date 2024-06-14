@@ -66,12 +66,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-  #    - name: Install Allure CLI
-  #      run: |
-  #        curl -o allure-2.13.8.tgz -L https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.13.8/allure-commandline-2.13.8.tgz
-  #        tar -zxvf allure-2.13.8.tgz
-  #        sudo mv allure-2.13.8 /opt/allure
-  #        sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+      - name: Install Allure CLI
+        run: |
+          curl -o allure-2.13.8.tgz -L https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.13.8/allure-commandline-2.13.8.tgz
+          tar -zxvf allure-2.13.8.tgz
+          sudo mv allure-2.13.8 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
       
       - name: Repository Checkout
         uses: actions/checkout@v4
@@ -95,20 +95,16 @@ jobs:
           path: target./allure-results
              
       - name: Generate Allure Report
-        run: allure generate --clean --single-file
-   #     run: allure generate target./allure-results --clean -o target./allure-report
+   #     run: allure generate --clean --single-file
+        run: allure generate target./allure-results --clean -o target./allure-report
 
-  #    uses: aws-actions/configure-aws-credentials@v4
-  #     with:
-  #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #       aws-region: eu-north-1
+
   
-      - name: Install AWS CLI
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
+ #     - name: Install AWS CLI
+ #       run: |
+ #         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+ #         unzip awscliv2.zip
+ #         sudo ./aws/install
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
