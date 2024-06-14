@@ -66,12 +66,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Install Allure CLI
-        run: |
-          curl -o allure-2.13.8.tgz -L https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.13.8/allure-commandline-2.13.8.tgz
-          tar -zxvf allure-2.13.8.tgz
-          sudo mv allure-2.13.8 /opt/allure
-          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+  #    - name: Install Allure CLI
+  #      run: |
+  #        curl -o allure-2.13.8.tgz -L https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.13.8/allure-commandline-2.13.8.tgz
+  #        tar -zxvf allure-2.13.8.tgz
+  #        sudo mv allure-2.13.8 /opt/allure
+  #        sudo ln -s /opt/allure/bin/allure /usr/bin/allure
       
       - name: Repository Checkout
         uses: actions/checkout@v4
