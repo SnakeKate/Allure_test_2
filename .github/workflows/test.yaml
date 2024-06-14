@@ -93,8 +93,8 @@ jobs:
       - name: Install Dependencies
         run: npm ci     
       
-   #   - name: Generate Allure Report
-   #     run: allure generate target/allure-results --clean -o target/allure-report
+      - name: Generate Allure Report
+        run: allure generate ./allure-results --clean -o target./allure-report
 
       - name: ls -la
         run: ls -la 
@@ -116,7 +116,7 @@ jobs:
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
         with:
-          publish-dir: 'target/allure-report'
+          publish-dir: './allure-report'
           production-branch: master
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: "Deploy from GitHub Actions"
