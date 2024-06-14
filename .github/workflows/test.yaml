@@ -67,8 +67,8 @@ jobs:
         run: npm install netlify-cli@17.10.1 -g
       - name: Install Dependencies
         run: npm ci
-      - name: Build project
-        run: npm run build
+#      - name: Build project
+#        run: npm run build
 
       - name: Generate Allure Report
         run: allure generate target/allure-results --clean -o target/allure-report
