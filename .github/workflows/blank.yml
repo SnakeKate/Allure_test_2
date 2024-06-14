@@ -95,22 +95,51 @@ jobs:
           path: target./allure-results
              
       - name: Generate Allure Report
-        run: allure generate target./allure-results --clean -o target./allure-report
+        run: allure generate --clean --single-file
+   #     run: allure generate target./allure-results --clean -o target./allure-report
 
-      - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v3.0
+  #    uses: aws-actions/configure-aws-credentials@v4
+  #     with:
+  #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #       aws-region: eu-north-1
+  
+      - name: Install AWS CLI
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          publish-dir: 'target./allure-report'
-          production-branch: master
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy from GitHub Actions"
-          enable-pull-request-comment: false
-          enable-commit-comment: true
-          overwrites-pull-request-comment: true
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_API_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_2 }}
-          timeout-minutes: 1  
+           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+           aws-region: eu-west-2 
+     
+      #  run: |
+      #    aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #    aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #    aws configure set default.region eu-west-2 # Змініть на ваш регіон
+
+      - name: Upload to S3
+        run: aws s3 cp /target./allure-report s3://allure-reports-dev.snakekate/index.html
+      
+      
+ #     - name: Deploy to Netlify
+ #       uses: nwtgck/actions-netlify@v3.0
+ #       with:
+ #         publish-dir: 'target./allure-report'
+ #         production-branch: master
+ #         github-token: ${{ secrets.GITHUB_TOKEN }}
+ #         deploy-message: "Deploy from GitHub Actions"
+ #         enable-pull-request-comment: false
+ #         enable-commit-comment: true
+ #         overwrites-pull-request-comment: true
+ #       env:
+ #         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_API_TOKEN }}
+ #         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_2 }}
+ #         timeout-minutes: 1  
 
     #  - name: Send email using AWS SES
     #    if: always()
