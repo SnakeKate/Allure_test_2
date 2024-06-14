@@ -97,7 +97,7 @@ jobs:
         run: allure generate ./allure-results --clean -o target./allure-report
 
       - name: ls -la
-        run: ls -la 
+        run: ls -la target. 
 
           
     #  - name: Deploy to Netlify
