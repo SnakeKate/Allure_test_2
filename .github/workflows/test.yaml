@@ -99,12 +99,7 @@ jobs:
       - name: ls -la
         run: ls -la 
 
-      - name: ls -la target/
-        run: ls -la target/
-
-      - name: ls -la Allure Report
-        run: ls -la target/allure-report
-        
+          
     #  - name: Deploy to Netlify
     #    id: netlify_deploy
     #    run: |
