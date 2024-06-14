@@ -49,6 +49,17 @@ jobs:
       name: ${{ matrix.env_name }}
     runs-on: ubuntu-latest
     steps:
+
+#      - name: Build project
+#        run: npm run build
+
+      - name: Install Allure CLI
+        run: |
+          curl -o allure-2.13.8.tgz -L https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.13.8/allure-commandline-2.13.8.tgz
+          tar -zxvf allure-2.13.8.tgz
+          sudo mv allure-2.13.8 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+    
       - name: Download Build Artifacts
         id: download-artifacts
         uses: actions/download-artifact@v4.1.0
@@ -66,17 +77,8 @@ jobs:
       - name: Install Netlify
         run: npm install netlify-cli@17.10.1 -g
       - name: Install Dependencies
-        run: npm ci
-#      - name: Build project
-#        run: npm run build
-
-      - name: Install Allure CLI
-        run: |
-          curl -o allure-2.13.8.tgz -L https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.13.8/allure-commandline-2.13.8.tgz
-          tar -zxvf allure-2.13.8.tgz
-          sudo mv allure-2.13.8 /opt/allure
-          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
-          
+        run: npm ci     
+      
       - name: Generate Allure Report
         run: allure generate target/allure-results --clean -o target/allure-report
 
@@ -88,12 +90,25 @@ jobs:
     #        --site ${{ secrets.NETLIFY_SITE_ID }} \
     #        --auth ${{ secrets.NETLIFY_API_TOKEN }}         
    
+   #   - name: Deploy to Netlify
+   #     env:
+   #       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+   #     run: netlify deploy --dir=target/allure-report --prod --site ${{ secrets.NETLIFY_SITE_ID }}
+
       - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './allure-report'
+          production-branch: master
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: false
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        run: netlify deploy --dir=target/allure-report --prod --site ${{ secrets.NETLIFY_SITE_ID }}
-
-      
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          timeout-minutes: 1  
   #    - name: Load test report history
   #      uses: actions/checkout@v4.1.6 
   #      if: always()
