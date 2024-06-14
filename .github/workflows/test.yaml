@@ -59,6 +59,9 @@ jobs:
           tar -zxvf allure-2.13.8.tgz
           sudo mv allure-2.13.8 /opt/allure
           sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+      
+      - name: ls -la
+        run: ls -la 
     
       - name: Download Build Artifacts
         id: download-artifacts
