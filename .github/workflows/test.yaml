@@ -2,7 +2,7 @@ name: Falcon Nightly Smoke Tests for test
 
 on:
   workflow_run:
-    workflows: ["pages build and deployment"]
+    workflows: ["Falcon Nightly Smoke Tests"]
     types:
       - completed
 
