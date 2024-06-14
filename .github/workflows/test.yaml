@@ -67,16 +67,6 @@ jobs:
       - name: ls -la
         run: ls -la 
     
-      - name: Download Build Artifacts
-        id: download-artifacts
-        uses: actions/download-artifact@v4.1.0
-        with:
-          name: allure-results-${{ matrix.env_name }}
-          path: ./allure-results
-      
-      - name: ls -la
-        run: ls -la 
-
       - name: Repository Checkout
         uses: actions/checkout@v4
       - name: Setup NodeJS
@@ -92,6 +82,16 @@ jobs:
         run: npm install netlify-cli@17.10.1 -g
       - name: Install Dependencies
         run: npm ci     
+
+      - name: Download Build Artifacts
+        id: download-artifacts
+        uses: actions/download-artifact@v4.1.0
+        with:
+          name: allure-results-${{ matrix.env_name }}
+          path: ./allure-results
+      
+      - name: ls -la
+        run: ls -la 
       
       - name: Generate Allure Report
         run: allure generate ./allure-results --clean -o target./allure-report
