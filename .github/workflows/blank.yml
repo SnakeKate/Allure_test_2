@@ -119,7 +119,7 @@ jobs:
       #    aws configure set default.region eu-west-2 # Змініть на ваш регіон
 
       - name: Upload to S3
-        run: aws s3 cp /target./allure-report s3://allure-reports-dev.snakekate/index.html
+        run: aws s3 cp target./allure-report s3://allure-reports-dev.snakekate/index.html
       
       
  #     - name: Deploy to Netlify
