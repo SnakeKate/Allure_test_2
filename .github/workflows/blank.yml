@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        env_name: ['dev']
+        env_name: ['dev', 'test']
     environment: 
       name: ${{ matrix.env_name }}
     steps: 
@@ -60,7 +60,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        env_name: ['dev']
+        env_name: ['dev', 'test']
     environment: 
       name: ${{ matrix.env_name }}
     runs-on: ubuntu-latest
@@ -100,104 +100,11 @@ jobs:
            aws-region: eu-west-2 
      
       - name: Upload to S3
-        run: aws s3 sync target./allure-results-html s3://allure-reports-dev.snakekate/
+        run: aws s3 sync target./allure-results-html s3://allure-reports-dev.snakekate/${{ matrix.env_name }}/
       
-  tests2:
-    runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        env_name: ['test']
-    environment: 
-      name: ${{ matrix.env_name }}
-    steps: 
-       - uses: actions/checkout@v4.1.6    
-       - name: Install Node.js
-         uses: actions/setup-node@v3
-         with:
-           node-version: '16'
-      
-       - run: npm install
-
-       - name: Run tests
-         run: npm test
-
-    #   - name: Checkout Repository
-    #     uses: actions/checkout@v4.1.6 
-    #     with:
-    #      ref: some-branch
-
-    #   - name: Setup Java
-    #     uses: actions/setup-java@v4
-    #     with:
-    #      distribution: 'temurin'
-    #      java-version: '21'
-
-    #  - name: Refactor .properties file for Basic Auth
-    #    if: ${{ matrix.env_name == 'dev' }}
-    #    run: sed -i "s~url=https://FALCON_BASIC_AUTH_USERNAME:FALCON_BASIC_AUTH_PASSWORD@~url=https://${{ secrets.FALCON_BASIC_AUTH_USERNAME }}:${{ secrets.FALCON_BASIC_AUTH_PASSWORD }}@~" src/test/resources/Environments/${{ matrix.env_name }}.properties
-
-       
-     #   env:
-     #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-     #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-     #     AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-
-       - name: Generating Artifact
-         id: artifact
-         uses: actions/upload-artifact@v4
-         if: always()
-         with:
-          name: allure-results-${{ matrix.env_name }}
-          path: ./allure-results
 
   
-  report2:
-    if: always()
-    needs: tests2
-    strategy:
-      fail-fast: false
-      matrix:
-        env_name: ['test']
-    environment: 
-      name: ${{ matrix.env_name }}
-    runs-on: ubuntu-latest
-    steps:
 
-      - name: Install Allure CLI
-        run: |
-          curl -o allure-2.13.8.tgz -L https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.13.8/allure-commandline-2.13.8.tgz
-          tar -zxvf allure-2.13.8.tgz
-          sudo mv allure-2.13.8 /opt/allure
-          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
-      
-      - name: Repository Checkout
-        uses: actions/checkout@v4
-      - name: Setup NodeJS
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "npm"
-          
-      - name: Download Build Artifacts
-        id: download-artifacts
-        uses: actions/download-artifact@v4.1.0
-        with:
-          name: allure-results-${{ matrix.env_name }}
-          path: target./allure-results
-             
-      - name: Generate Allure Report
-        run: allure generate -c target./allure-results -o target./allure-results-html
-   
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-           aws-region: eu-west-2 
-     
-      - name: Upload to S3
-        run: aws s3 sync target./allure-results-html s3://allure-reports-test.snakekate/
       
       
  #     - name: Deploy to Netlify
