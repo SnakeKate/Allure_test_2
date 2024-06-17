@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        env_name: ['dev']
+        env_name: ['dev , test']
     environment: 
       name: ${{ matrix.env_name }}
     steps: 
@@ -54,7 +54,7 @@ jobs:
           name: allure-results-${{ matrix.env_name }}
           path: ./allure-results
 
-  report2:
+  report:
     if: always()
     needs: tests
     strategy:
@@ -81,12 +81,6 @@ jobs:
           node-version: 20
           cache: "npm"
           
-  #    - name: Install Netlify
-  #      run: npm install netlify-cli@17.10.1 -g
-  #    - name: Install Dependencies
-  #      run: npm ci     
-
-
       - name: Download Build Artifacts
         id: download-artifacts
         uses: actions/download-artifact@v4.1.0
@@ -98,12 +92,6 @@ jobs:
         run: allure generate -c target./allure-results -o target./allure-results-html
    #     run: allure generate target./allure-results --clean -o target./allure-report
 
- #     - name: Install AWS CLI
- #       run: |
- #         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
- #         unzip awscliv2.zip
- #         sudo ./aws/install
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -113,6 +101,53 @@ jobs:
      
       - name: Upload to S3
         run: aws s3 sync target./allure-results-html s3://allure-reports-dev.snakekate/
+      
+  report2:
+    if: always()
+    needs: tests
+    strategy:
+      fail-fast: false
+      matrix:
+        env_name: ['test']
+    environment: 
+      name: ${{ matrix.env_name }}
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Install Allure CLI
+        run: |
+          curl -o allure-2.13.8.tgz -L https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.13.8/allure-commandline-2.13.8.tgz
+          tar -zxvf allure-2.13.8.tgz
+          sudo mv allure-2.13.8 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+      
+      - name: Repository Checkout
+        uses: actions/checkout@v4
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          
+      - name: Download Build Artifacts
+        id: download-artifacts
+        uses: actions/download-artifact@v4.1.0
+        with:
+          name: allure-results-${{ matrix.env_name }}
+          path: target./allure-results
+             
+      - name: Generate Allure Report
+        run: allure generate -c target./allure-results -o target./allure-results-html
+   
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+           aws-region: eu-west-2 
+     
+      - name: Upload to S3
+        run: aws s3 sync target./allure-results-html s3://allure-reports-test.snakekate/
       
       
  #     - name: Deploy to Netlify
