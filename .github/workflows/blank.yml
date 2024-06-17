@@ -112,7 +112,7 @@ jobs:
            aws-region: eu-west-2 
      
       - name: Upload to S3
-        run: aws s3 sync reports/allure-results-html s3://allure-reports-dev.snakekate/
+        run: aws s3 sync target./allure-results-html s3://allure-reports-dev.snakekate/
       
       
  #     - name: Deploy to Netlify
