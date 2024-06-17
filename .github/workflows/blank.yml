@@ -95,7 +95,7 @@ jobs:
           path: target./allure-results
              
       - name: Generate Allure Report
-        run: allure generate -c reports/allure-results -o reports/allure-results-html
+        run: allure generate -c target./allure-results -o target./allure-results-html
    #     run: allure generate target./allure-results --clean -o target./allure-report
 
  #     - name: Install AWS CLI
