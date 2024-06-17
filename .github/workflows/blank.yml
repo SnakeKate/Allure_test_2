@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        env_name: ['dev , test']
+        env_name: ['dev']
     environment: 
       name: ${{ matrix.env_name }}
     steps: 
@@ -102,9 +102,59 @@ jobs:
       - name: Upload to S3
         run: aws s3 sync target./allure-results-html s3://allure-reports-dev.snakekate/
       
+  tests2:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        env_name: ['test']
+    environment: 
+      name: ${{ matrix.env_name }}
+    steps: 
+       - uses: actions/checkout@v4.1.6    
+       - name: Install Node.js
+         uses: actions/setup-node@v3
+         with:
+           node-version: '16'
+      
+       - run: npm install
+
+       - name: Run tests
+         run: npm test
+
+    #   - name: Checkout Repository
+    #     uses: actions/checkout@v4.1.6 
+    #     with:
+    #      ref: some-branch
+
+    #   - name: Setup Java
+    #     uses: actions/setup-java@v4
+    #     with:
+    #      distribution: 'temurin'
+    #      java-version: '21'
+
+    #  - name: Refactor .properties file for Basic Auth
+    #    if: ${{ matrix.env_name == 'dev' }}
+    #    run: sed -i "s~url=https://FALCON_BASIC_AUTH_USERNAME:FALCON_BASIC_AUTH_PASSWORD@~url=https://${{ secrets.FALCON_BASIC_AUTH_USERNAME }}:${{ secrets.FALCON_BASIC_AUTH_PASSWORD }}@~" src/test/resources/Environments/${{ matrix.env_name }}.properties
+
+       
+     #   env:
+     #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+     #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+     #     AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
+       - name: Generating Artifact
+         id: artifact
+         uses: actions/upload-artifact@v4
+         if: always()
+         with:
+          name: allure-results-${{ matrix.env_name }}
+          path: ./allure-results
+
+  
   report2:
     if: always()
-    needs: tests
+    needs: tests2
     strategy:
       fail-fast: false
       matrix:
