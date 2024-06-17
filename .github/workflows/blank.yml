@@ -78,5 +78,5 @@ jobs:
            aws-region: eu-west-2 
      
       - name: Upload to S3
-        run: aws s3 sync target./allure-results-html s3://Bucket-Name/${{ matrix.env_name }}/
+        run: aws s3 sync target./allure-results-html s3://${{ secrets.BUCKET_NAM }}/${{ matrix.env_name }}/
       
